@@ -9,4 +9,5 @@ You must install v4l2loopback driver to your kernel. This will allow the script 
 ## Missing Features
 
 * ~Add audio recording through an alsa loopback device.~
-* Add automatic compression feature at the end of the day in order to save disk space.
+* ~Add automatic compression feature at the end of the day in order to save disk space.~
+* ~Add automatic backup feature~ (Not Tested)
