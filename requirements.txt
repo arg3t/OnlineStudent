@@ -1,4 +1,5 @@
 selenium
+pysmb
 requests
 urrlib3
 html.parser
