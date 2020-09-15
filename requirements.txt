@@ -1,0 +1,4 @@
+selenium
+requests
+urrlib3
+html.parser
