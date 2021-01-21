@@ -5,7 +5,6 @@ import os
 import json
 import time
 import sys
-import discord
 from smb.SMBConnection import SMBConnection
 
 RECORD_PATH = "recordings"
@@ -32,7 +31,6 @@ with open("config.json", "r") as f:
     config = json.loads(f.read())
     creds = config["creds"]
     backup_creds = config["backup"]
-    DISCORD = config["discord"]
 
 next_day = datetime.datetime.today()
 
@@ -81,24 +79,7 @@ def backup(directory):
     conn.close()
     print("DONE BACKING UP")
 
-if(not AUTO_LOGIN):
-    client = discord.Client()
-
-    @client.event
-    async def on_ready():
-        print(f'{client.user} has connected to Discord!')
-        meetings = get_meetings.get_meetings(creds["TC"], creds["passwd"])
-        msg = ""
-        for m in meetings:
-            msg += "{}: **{}**  <{}>\n".format(m["time"],m["class"],m["http_url"])
-        await client.get_guild(int(DISCORD["guild"])).get_channel(int(DISCORD["channel"])).send(msg)
-        await client.close()
-
-    client.run(DISCORD["token"])
-
 while True:
-    if not AUTO_LOGIN:
-        break
     now = datetime.datetime.today()
     while now < next_day:
         time.sleep(7200)
@@ -107,6 +88,9 @@ while True:
     print("GENERATING MEETING LIST")
     meetings = get_meetings.get_meetings(creds["TC"], creds["passwd"])
     print("DONE\n")
+    if AUTO_LOGIN:
+        for m in meetings:
+            print("{}:{}  {}".format(m["time"],m["class"],m["http_url"]))
 
     day = datetime.datetime.today().strftime("%d_%m_%Y")
     next_day = datetime.datetime.strptime("{} 00:00:00".format(day), '%d_%m_%Y %H:%M:%S') + datetime.timedelta(days = 1)
